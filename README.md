@@ -49,38 +49,23 @@ bysolutions-static/
 ├── .gitignore                      # Root Git ignore rules (secrets, dependencies, logs, OS files)
 ├── README.md                       # Comprehensive architecture and deployment guide
 │
-├── backend/                        # Express.js REST API
-│   ├── config/
-│   │   └── db.js                   # MongoDB Atlas connection & DNS resolver configuration
-│   ├── middleware/
-│   │   ├── errorHandler.js         # Centralized HTTP error handler (safe client responses)
-│   │   ├── rateLimiter.js          # IP-based rate limiting (5 submissions / 15 min)
-│   │   └── validateContact.js      # Input validation rules & service allowlist
-│   ├── models/
-│   │   └── Contact.js              # Mongoose schema for inquiries and quote requests
-│   ├── routes/
-│   │   └── contactRoutes.js        # Contact and quote API endpoints
-│   ├── utils/
-│   │   └── sendEmail.js            # Zoho SMTP transporter & HTML-escaped email templates
-│   ├── .env                        # Local secrets (NEVER committed - excluded by .gitignore)
-│   ├── .env.example                # Safe environment variable template with placeholders
-│   ├── .gitignore                  # Backend-level Git ignore rules
-│   ├── index.js                    # Express application entry point & graceful shutdown
-│   ├── package.json                # Backend dependencies and scripts
-│   └── package-lock.json           # Exact dependency lockfile
+├── docs/                           # Architecture and operational guides
+│   └── DEPLOYMENT_GUIDE.md         # Production deployment manual
 │
-└── frontend/                       # Client-side static website
-    ├── css/
-    │   └── styles_1.css            # Primary stylesheet (design system, layouts, dark theme)
-    ├── images/                     # Optimized visual assets
-    │   ├── branding/               # Logos and favicons
-    │   ├── hero/                   # High-resolution datacenter hero imagery
-    │   ├── partners/               # Authorized partner badges (Microsoft, Dell, Cisco, etc.)
-    │   └── services/               # Solution visual banners
-    ├── index/
-    │   └── index_1.html            # Main landing page markup
-    └── js/
-        └── main_1.js               # Client-side form handler, navigation, and UI animations
+├── frontend/                       # Client-side static website
+│   ├── index.html                  # Main landing page markup
+│   ├── css/
+│   │   └── styles.css              # Primary stylesheet (design system, layouts, dark theme)
+│   ├── js/
+│   │   └── main.js                 # Client-side form handler, navigation, and UI animations
+│   └── images/                     # Optimized visual assets
+│       ├── about/                  # About section imagery
+│       ├── branding/               # Logos and favicons
+│       ├── hero/                   # High-resolution datacenter hero imagery
+│       ├── partners/               # Authorized partner badges (Microsoft, Dell, Cisco, etc.)
+│       └── services/               # Solution visual banners
+│
+└── backend/                        # Express.js REST API
 ```
 
 ---
@@ -132,10 +117,10 @@ Using Python:
 python -m http.server 5500
 ```
 Or using VS Code Live Server:
-- Open `frontend/index/index_1.html` and click **Go Live** (port `5500`).
+- Open `frontend/index.html` and click **Go Live** (port `5500`).
 
 Open your browser to:
-`http://localhost:5500/frontend/index/index_1.html`
+`http://localhost:5500/frontend/index.html` (or `http://localhost:5500/index.html` if serving `frontend/` as root)
 
 ---
 
@@ -163,7 +148,7 @@ A sanitized template is maintained in [backend/.env.example](backend/.env.exampl
 sequenceDiagram
     autonumber
     actor Customer as User / Customer
-    participant Browser as Frontend (main_1.js)
+    participant Browser as Frontend (main.js)
     participant RateLimiter as Rate Limiter (IP)
     participant Validator as Express Validator
     participant DB as MongoDB Atlas
@@ -236,8 +221,7 @@ Because the project is decoupled, the frontend and backend can be hosted on spec
 ### Option A: Frontend on Vercel / Netlify / Cloudflare Pages
 - **Root Directory**: `frontend`
 - **Build Command**: None (pure static assets)
-- **Output Directory**: `.` (or configure rewrite to serve `index/index_1.html` at `/`)
-- **Headers / Redirects**: Redirect `/` to `/index/index_1.html` or place a lightweight root router if hosting providers do not support directory nesting natively.
+- **Output Directory**: `.` (serves `index.html` directly at `/`)
 
 ### Option B: Backend on Render / Railway / Fly.io
 - **Root Directory**: `backend`
@@ -281,7 +265,7 @@ When you are ready to execute the production deployment, follow this sequence:
   - Deploy `frontend/` to your chosen static host (Vercel, Netlify, Cloudflare Pages, GitHub Pages).
   - Configure domain routing so the main landing page loads at your custom domain (`https://bysolutions.in`).
 - [ ] **3. Update Frontend API Endpoint**:
-  - In [frontend/js/main_1.js](frontend/js/main_1.js#L363), change:
+  - In [frontend/js/main.js](frontend/js/main.js#L363), change:
     ```javascript
     // Change from:
     const response = await fetch('http://localhost:5000/api/contact', {

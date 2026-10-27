@@ -1,5 +1,5 @@
 /**
- * BY SOLUTIONS — ENTERPRISE REDESIGN (main_1.js)
+ * BY SOLUTIONS — ENTERPRISE REDESIGN (main.js)
  * Modular Vanilla JavaScript Implementation - Final Premium Version
  */
 
